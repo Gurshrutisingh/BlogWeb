@@ -66,7 +66,13 @@ app.post('/compose',(req,res)=>{
         postHeader: req.body.postTitle,
         postBody: req.body.post
     };
-    arr.push(post);
+    const newBlog= new blog({
+        title: post.postHeader,
+        content: post.postBody
+    });
+    newBlog.save();
+    console.log("added");
+    //arr.push(post);
     res.redirect('/');
 })
 app.listen(9000,()=>{
