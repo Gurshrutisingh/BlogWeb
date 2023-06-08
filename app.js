@@ -62,16 +62,22 @@ app.get('/post/:blog',(req,res)=>{
     //
 })
 app.post('/compose',(req,res)=>{
-    var post={
-        postHeader: req.body.postTitle,
-        postBody: req.body.post
-    };
+    // var post={
+    //     postHeader: req.body.postTitle,
+    //     postBody: req.body.post
+    // };
     const newBlog= new blog({
-        title: post.postHeader,
-        content: post.postBody
+        title: req.body.postTitle,
+        content: req.body.post
     });
-    newBlog.save();
-    console.log("added");
+    //newBlog.save();
+    newBlog.save()
+    .then((docs)=>{
+        console.log("added");
+    })
+    .catch((err)=>{
+        console.log(err);
+    });
     //arr.push(post);
     res.redirect('/');
 })
