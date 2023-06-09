@@ -11,8 +11,10 @@ const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pelle
 const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
 //console.log(_);
 const app = express();
-var arr=[];
+//var arr=[];
 var para="";
+var h="";
+var t="";
 var postReply={postHead:"",postText:""};
 async function main() {
     await mongoose.connect('mongodb://127.0.0.1:27017/blog');
@@ -30,8 +32,16 @@ app.use(express.static("public"));
 
   
 app.get('/',(req,res)=>{
+
+    blog.find()
+    .then(function(objs) {
+      res.render('home',{homeStartingContent: homeStartingContent,Newpost: objs});
+ //       console.log(objs);
+    })
+    .catch(function (err) {
+        console.log("error");
+    });
     
-    res.render('home',{homeStartingContent: homeStartingContent,Newpost: arr});
 })
 app.get('/about',(req,res)=>{
     res.render('about',{aboutContent: aboutContent});
@@ -43,24 +53,20 @@ app.get('/compose',(req,res)=>{
     res.render('compose');
 })
 app.get('/post',(req,res)=>{
-    var h=postReply.postHeader;
-    var t=postReply.postText;
-    res.render('post',{postHeader: h,postText: t});
+     res.render('post',{postHeader: h,postText: t});
 })
-app.get('/post/:blog',(req,res)=>{
-   para=req.params.blog;
-   para=_.lowerCase(para);
+app.get('/post/:blogId',(req,res)=>{
+   para=req.params.blogId;
    console.log(para);
-   arr.forEach(function(ele){
-    var head=_.lowerCase(ele.postHeader);
-    if(head==para)
-    {
-        postReply.postHeader=ele.postHeader;
-        postReply.postText=ele.postBody;
-        res.redirect('/post');
-    }
-   });
-    //
+   blog.findById(para)
+  .then(function(result) {
+    h=result.title;
+    t=result.content;
+    res.redirect("/post");
+  })
+  .catch(function(err) {
+    console.log(err);
+  });
 })
 app.post('/compose',(req,res)=>{
     
@@ -71,12 +77,13 @@ app.post('/compose',(req,res)=>{
     newBlog.save()
     .then((docs)=>{
         console.log("added");
+        res.redirect('/');
     })
     .catch((err)=>{
         console.log(err);
     });
     //arr.push(post);
-    res.redirect('/');
+    
 })
 app.listen(9000,()=>{
     console.log("server is running well");

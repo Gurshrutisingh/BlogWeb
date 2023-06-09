@@ -1,15 +1,15 @@
 <% function truncateString(str, num) {  %>
-    <% if (str.length > num) {  %>
-      <% return str.slice(0, num) + "..."; %>
-      <%   } else {  %>
-    <%  return str; %>
- <% } %>
+  <% if (str.length > num) {  %>
+    <% return str.substring(0, num) + "..."; %>
+    <%   } else {  %>
+  <%  return str; %>
+<% } %>
 <% } %>
 <%- include("./partials/header") -%>
 <h1>Home</h1>
 <p><%=homeStartingContent%></p>
-<% Newpost.forEach(function(ele){ %>
-<h1><%= ele.postHeader %></h1>
-<p><%= truncateString(ele.postBody,100) %><a href="/post/<%= ele.postHeader %>">Read more</a></p>
+<% Newpost.forEach(function(item){ %>
+<h1><%= item.title %></h1>
+<p><%= truncateString(item.content,100) %><a href="/post/<%= item._id %>">Read more</a></p>
 <% }); %>
 <%-include("./partials/footer")-%>
