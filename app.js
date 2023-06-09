@@ -15,7 +15,7 @@ var arr=[];
 var para="";
 var postReply={postHead:"",postText:""};
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017/toDolistDB');
+    await mongoose.connect('mongodb://127.0.0.1:27017/blog');
 }
 const blogSchema = new mongoose.Schema({
     title: String,
@@ -62,15 +62,11 @@ app.get('/post/:blog',(req,res)=>{
     //
 })
 app.post('/compose',(req,res)=>{
-    // var post={
-    //     postHeader: req.body.postTitle,
-    //     postBody: req.body.post
-    // };
+    
     const newBlog= new blog({
         title: req.body.postTitle,
         content: req.body.post
     });
-    //newBlog.save();
     newBlog.save()
     .then((docs)=>{
         console.log("added");
