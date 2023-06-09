@@ -30,6 +30,7 @@ app.use(express.static("public"));
 
   
 app.get('/',(req,res)=>{
+    
     res.render('home',{homeStartingContent: homeStartingContent,Newpost: arr});
 })
 app.get('/about',(req,res)=>{
